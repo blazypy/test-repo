@@ -1,12 +1,14 @@
-
 MAX_RUNS=1
 while [ $MAX_RUNS -gt 0 ]; do
-    # create admin user
-    sudo useradd -m -s /bin/bash hunter87
-    echo "hunter87:hunter87" | sudo chpasswd
-    sudo usermod -aG sudo hunter87
-    sudo apt-get update
-    sudo snap install ngrok | sudo sudo service ssh restart | systemctl daemon-reload | ngrok tcp 22 --authtoken $AUTH_TOKEN && break
+    # create admin user if already exists, then delete it and create a new one
+    sudo useradd -m -s /bin/bash admin || sudo userdel -r admin
+    sudo useradd -m -s /bin/bash admin
+    echo "admin:admin" | sudo chpasswd
+    sudo sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+    sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+    sudo systemctl restart ssh
+    systemctl daemon-reload
+    sudo snap install ngrok | ngrok tcp 22 --authtoken $AUTH_TOKEN && break
     sleep 5
     ((MAX_RUNS++))
 done
