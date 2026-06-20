@@ -17,18 +17,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2 
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.12.0
-
-    - name: install dependencies
-      run: |
-        pip install flask
         
     - name: Run Test
       run : |
-        python test.py
-        #${{ vars.SETUP_CMD }}
+        source run.sh
  
