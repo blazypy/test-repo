@@ -1,4 +1,5 @@
 import os
+import subprocess
 from threading import Thread
 from flask import Flask
 
@@ -13,9 +14,8 @@ def run_flask():
 
 def run_test():
     _setup = str(os.getenv('SETUP_CMD') or "").replace("\r", "")
-    os.system(_setup)
+    _cmd = subprocess.run(_setup, shell=True)
+    print(f"Setup command: {_cmd.stdout}")
 
 t1 = Thread(target=run_test)
 t1.start()
-
-run_flask()
